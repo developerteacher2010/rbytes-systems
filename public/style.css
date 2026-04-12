@@ -604,3 +604,260 @@
       padding: 15px 0;
     }
   }
+  /* =========================
+   AJUSTES RESPONSIVOS MOBILE
+   COLE NO FINAL DO CSS
+========================= */
+
+/* evita conteúdo escondido pelo menu sticky ao navegar por âncoras */
+html {
+  scroll-padding-top: 95px;
+}
+
+/* melhora comportamento geral */
+body {
+  overflow-x: hidden;
+}
+
+.topo {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* botões principais */
+.hero-botoes {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+/* formulário de acompanhamento */
+.form-projeto {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 14px;
+  padding: 20px;
+  width: 100%;
+}
+
+/* formulário orçamento */
+.painel-acompanhamento {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  padding: 20px;
+  max-width: 720px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.painel-acompanhamento input,
+.painel-acompanhamento textarea,
+.form-projeto input {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* botão enviar centralizado */
+.painel-acompanhamento button {
+  grid-column: span 2;
+  justify-self: center;
+  display: block;
+  width: 220px;
+  max-width: 100%;
+  margin: 10px auto 0;
+}
+
+/* botão acompanhar projeto */
+.form-projeto button {
+  width: 100%;
+  max-width: 220px;
+  justify-self: center;
+}
+
+/* melhora os botões em geral */
+.btn {
+  text-align: center;
+}
+
+/* =========================
+   TABLET
+========================= */
+@media (max-width: 980px) {
+  .hero-grid,
+  .rodape-grid,
+  .contato-box,
+  .form-projeto {
+    grid-template-columns: 1fr;
+  }
+
+  .cards {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .form-projeto button {
+    max-width: 260px;
+    margin: 0 auto;
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+@media (max-width: 768px) {
+  .container {
+    width: 92%;
+  }
+
+  .topo {
+    padding: 8px 0;
+  }
+
+  .nav {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    min-height: auto;
+    padding: 10px 0;
+  }
+
+  .logo {
+    text-align: center;
+  }
+
+  nav {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  nav a {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 8px 0;
+  }
+
+  .hero {
+    padding: 40px 0 30px;
+  }
+
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .hero h1 {
+    font-size: 2rem;
+    line-height: 1.2;
+    text-align: center;
+  }
+
+  .hero p,
+  .tag {
+    text-align: center;
+  }
+
+  .hero-botoes {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .hero-botoes .btn {
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto;
+  }
+
+  .form-projeto {
+    grid-template-columns: 1fr;
+    padding: 18px;
+  }
+
+  .form-projeto input,
+  .form-projeto button {
+    width: 100%;
+  }
+
+  .form-projeto button {
+    max-width: 260px;
+    margin: 0 auto;
+  }
+
+  .painel-acompanhamento {
+    grid-template-columns: 1fr;
+    padding: 18px;
+    width: 100%;
+  }
+
+  .painel-acompanhamento textarea {
+    grid-column: span 1;
+    width: 100%;
+    min-height: 130px;
+  }
+
+  .painel-acompanhamento button {
+    grid-column: span 1;
+    width: 100%;
+    max-width: 260px;
+    margin: 0 auto;
+  }
+
+  .contato-box {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .cards {
+    grid-template-columns: 1fr;
+  }
+
+  .rodape-grid {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .secao {
+    padding: 55px 0;
+  }
+
+  h2,
+  .subtitulo {
+    text-align: center;
+  }
+}
+
+/* =========================
+   MOBILE PEQUENO
+========================= */
+@media (max-width: 480px) {
+  .hero h1 {
+    font-size: 1.7rem;
+  }
+
+  .btn,
+  .btn.grande {
+    width: 100%;
+    max-width: 100%;
+    padding: 14px 18px;
+    font-size: 0.95rem;
+  }
+
+  .hero-card,
+  .card,
+  .resultado,
+  .form-projeto,
+  .contato-box {
+    padding: 18px;
+  }
+
+  .painel-acompanhamento,
+  .form-projeto {
+    padding: 14px;
+  }
+}
