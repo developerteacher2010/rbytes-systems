@@ -225,15 +225,12 @@
   
   /* SCROLL ANIMATION */
   .card {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: 0.6s;
-  }
-  
-  .card.show {
     opacity: 1;
     transform: translateY(0);
+    transition: 0.3s;
   }
+  
+
   
   /* FUNDO ANIMADO TECH */
   body {
@@ -452,6 +449,34 @@
   h2{
     text-align: center;
   }
+  .painel-login-admin {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 14px;
+  padding: 20px;
+}
+
+.painel-login-admin input {
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  font-size: 0.95rem;
+  outline: none;
+}
+
+.painel-login-admin input:focus {
+  border-color: var(--primary);
+}
+
+.hidden {
+  display: none;
+}
+
+@media (max-width: 700px) {
+  .painel-login-admin {
+    grid-template-columns: 1fr;
+  }
+}
   .depoimento .estrelas {
     color: #f5b301;
     font-size: 1.2rem;

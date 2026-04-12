@@ -1,11 +1,21 @@
 const formAcompanhar = document.getElementById("formAcompanhar");
 const resultadoProjeto = document.getElementById("resultadoProjeto");
+const codigoInput = document.getElementById("codigo");
+const senhaInput = document.getElementById("senha");
 
-formAcompanhar.addEventListener("submit", async (e) => {
+function limparResultadoProjeto() {
+  resultadoProjeto.innerHTML = "";
+  resultadoProjeto.classList.add("hidden");
+}
+
+codigoInput?.addEventListener("input", limparResultadoProjeto);
+senhaInput?.addEventListener("input", limparResultadoProjeto);
+
+formAcompanhar?.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  const codigo = document.getElementById("codigo").value.trim();
-  const senha = document.getElementById("senha").value.trim();
+  const codigo = codigoInput.value.trim();
+  const senha = senhaInput.value.trim();
 
   resultadoProjeto.classList.remove("hidden");
   resultadoProjeto.innerHTML = `<div class="sucesso">Consultando projeto...</div>`;
@@ -22,29 +32,43 @@ formAcompanhar.addEventListener("submit", async (e) => {
     const dados = await resposta.json();
 
     if (!dados.success) {
-      resultadoProjeto.innerHTML = `<div class="erro">${dados.message}</div>`;
+      resultadoProjeto.innerHTML = `<div class="erro">${dados.message || "Projeto não encontrado."}</div>`;
       return;
     }
 
     const projeto = dados.projeto;
+    const timelineHtml = dados.timeline && dados.timeline.length
+      ? dados.timeline.map(item => `
+          <div class="card" style="margin-top:10px;">
+            <p><strong>${item.etapa}</strong> - ${item.data}</p>
+            <p>${item.descricao}</p>
+          </div>
+        `).join("")
+      : "<p>Nenhuma etapa registrada ainda.</p>";
 
     resultadoProjeto.innerHTML = `
       <div class="status-tag">${projeto.status}</div>
-      <h3>${projeto.nomeProjeto}</h3>
+      <h3>${projeto.nomeprojeto || projeto.nomeProjeto}</h3>
       <p><strong>Cliente:</strong> ${projeto.cliente}</p>
       <p><strong>Código:</strong> ${projeto.codigo}</p>
-      <p><strong>Etapa atual:</strong> ${projeto.etapaAtual}</p>
-      <p><strong>Previsão de entrega:</strong> ${projeto.previsaoEntrega}</p>
+      <p><strong>Etapa atual:</strong> ${projeto.etapaatual || projeto.etapaAtual}</p>
+      <p><strong>Previsão de entrega:</strong> ${projeto.previsaoentrega || projeto.previsaoEntrega || "Não definida"}</p>
 
       <div class="barra">
         <span style="width: ${projeto.progresso}%;"></span>
       </div>
 
       <p><strong>Progresso:</strong> ${projeto.progresso}%</p>
-      <p><strong>Observações:</strong> ${projeto.observacoes}</p>
+      <p><strong>Observações:</strong> ${projeto.observacoes || "-"}</p>
+
+      <h4 style="margin-top:20px;">Linha do tempo do projeto</h4>
+      ${timelineHtml}
     `;
+
+    // limpa os campos depois da consulta
+    formAcompanhar.reset();
   } catch (erro) {
-    resultadoProjeto.innerHTML = `<div class="erro">Erro ao consultar o projeto. Tente novamente.</div>`;
+    resultadoProjeto.innerHTML = `<div class="erro">Erro ao consultar o projeto.</div>`;
   }
 });
 

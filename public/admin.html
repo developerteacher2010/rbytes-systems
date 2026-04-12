@@ -11,13 +11,12 @@
   <section class="secao">
     <div class="container">
       <h1>Painel Administrativo - Rbytes Systems</h1>
-      <p class="subtitulo">Cadastre projetos, acompanhe leads e gerencie a timeline.</p>
+      <p class="subtitulo">Faça login para acessar o painel.</p>
 
-      <!-- LOGIN -->
-      <div class="card" style="margin-bottom: 30px;">
+      <div class="card" style="max-width: 700px; margin: 0 auto 30px;">
         <h2>Login do administrador</h2>
 
-        <form id="loginAdminForm" class="form-projeto" style="grid-template-columns: 1fr 1fr auto;">
+        <form id="loginAdminForm" class="painel-login-admin">
           <input type="text" id="adminUsuario" placeholder="Usuário" required>
           <input type="password" id="adminSenha" placeholder="Senha" required>
           <button type="submit" class="btn principal">Entrar</button>
@@ -26,10 +25,7 @@
         <div id="loginAdminResultado" style="margin-top: 15px;"></div>
       </div>
 
-      <!-- ÁREA ADMIN -->
       <div id="adminArea" class="hidden">
-
-        <!-- CADASTRO DE PROJETO -->
         <div class="card" style="margin-bottom: 30px;">
           <h2>Cadastrar Projeto</h2>
 
@@ -48,7 +44,6 @@
           <div id="resultadoProjetoAdmin" style="margin-top: 15px;"></div>
         </div>
 
-        <!-- TIMELINE -->
         <div class="card" style="margin-bottom: 30px;">
           <h2>Adicionar Etapa na Timeline</h2>
 
@@ -63,18 +58,15 @@
           <div id="resultadoTimeline" style="margin-top: 15px;"></div>
         </div>
 
-        <!-- LISTA DE PROJETOS -->
         <div class="card" style="margin-bottom: 30px;">
           <h2>Projetos Cadastrados</h2>
           <div id="listaProjetos"></div>
         </div>
 
-        <!-- LEADS -->
         <div class="card">
           <h2>Orçamentos Recebidos</h2>
           <div id="listaLeads"></div>
         </div>
-
       </div>
     </div>
   </section>

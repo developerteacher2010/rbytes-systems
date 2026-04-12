@@ -11,8 +11,7 @@ const resultadoTimeline = document.getElementById("resultadoTimeline");
 const listaProjetos = document.getElementById("listaProjetos");
 const listaLeads = document.getElementById("listaLeads");
 
-// Login admin
-loginAdminForm.addEventListener("submit", async (e) => {
+loginAdminForm?.addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const usuario = document.getElementById("adminUsuario").value.trim();
@@ -30,22 +29,21 @@ loginAdminForm.addEventListener("submit", async (e) => {
     const dados = await resposta.json();
 
     if (!dados.success) {
-      loginAdminResultado.innerHTML = `<div class="erro">${dados.message}</div>`;
+      loginAdminResultado.innerHTML = `<div class="erro">${dados.message || "Login inválido"}</div>`;
       return;
     }
 
-    loginAdminResultado.innerHTML = `<div class="sucesso">${dados.message}</div>`;
+    loginAdminResultado.innerHTML = `<div class="sucesso">${dados.message || "Login realizado com sucesso."}</div>`;
     adminArea.classList.remove("hidden");
 
-    carregarProjetos();
-    carregarLeads();
+    await carregarProjetos();
+    await carregarLeads();
   } catch (erro) {
     loginAdminResultado.innerHTML = `<div class="erro">Erro ao realizar login.</div>`;
   }
 });
 
-// Cadastro de projeto
-formProjeto.addEventListener("submit", async (e) => {
+formProjeto?.addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const formData = new FormData(formProjeto);
@@ -59,7 +57,7 @@ formProjeto.addEventListener("submit", async (e) => {
     const dados = await resposta.json();
 
     if (!dados.success) {
-      resultadoProjetoAdmin.innerHTML = `<div class="erro">${dados.message}</div>`;
+      resultadoProjetoAdmin.innerHTML = `<div class="erro">${dados.message || "Erro ao cadastrar projeto."}</div>`;
       return;
     }
 
@@ -78,8 +76,7 @@ formProjeto.addEventListener("submit", async (e) => {
   }
 });
 
-// Adicionar timeline
-formTimeline.addEventListener("submit", async (e) => {
+formTimeline?.addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const formData = new FormData(formTimeline);
@@ -103,18 +100,17 @@ formTimeline.addEventListener("submit", async (e) => {
     const dados = await resposta.json();
 
     if (!dados.success) {
-      resultadoTimeline.innerHTML = `<div class="erro">${dados.message}</div>`;
+      resultadoTimeline.innerHTML = `<div class="erro">${dados.message || "Erro ao adicionar etapa."}</div>`;
       return;
     }
 
-    resultadoTimeline.innerHTML = `<div class="sucesso">${dados.message}</div>`;
+    resultadoTimeline.innerHTML = `<div class="sucesso">${dados.message || "Etapa adicionada com sucesso."}</div>`;
     formTimeline.reset();
   } catch (erro) {
     resultadoTimeline.innerHTML = `<div class="erro">Erro ao adicionar etapa.</div>`;
   }
 });
 
-// Carregar projetos
 async function carregarProjetos() {
   try {
     const resposta = await fetch("/api/admin/projetos");
@@ -125,24 +121,23 @@ async function carregarProjetos() {
       return;
     }
 
-    if (dados.projetos.length === 0) {
+    if (!dados.projetos || dados.projetos.length === 0) {
       listaProjetos.innerHTML = `<p>Nenhum projeto cadastrado ainda.</p>`;
       return;
     }
 
     listaProjetos.innerHTML = dados.projetos.map((projeto) => `
       <div class="card" style="margin-bottom: 15px;">
-        <h3>${projeto.nomeProjeto}</h3>
+        <h3>${projeto.nomeprojeto || projeto.nomeProjeto}</h3>
         <p><strong>ID:</strong> ${projeto.id}</p>
         <p><strong>Cliente:</strong> ${projeto.cliente}</p>
         <p><strong>Código:</strong> ${projeto.codigo}</p>
         <p><strong>Senha:</strong> ${projeto.senha}</p>
         <p><strong>Status:</strong> ${projeto.status}</p>
         <p><strong>Progresso:</strong> ${projeto.progresso}%</p>
-        <p><strong>Etapa atual:</strong> ${projeto.etapaAtual}</p>
-        <p><strong>Previsão de entrega:</strong> ${projeto.previsaoEntrega || "Não definida"}</p>
+        <p><strong>Etapa atual:</strong> ${projeto.etapaatual || projeto.etapaAtual}</p>
+        <p><strong>Previsão de entrega:</strong> ${projeto.previsaoentrega || projeto.previsaoEntrega || "Não definida"}</p>
         <p><strong>Observações:</strong> ${projeto.observacoes || "-"}</p>
-        ${projeto.imagem ? `<img src="${projeto.imagem}" alt="Imagem do projeto" style="max-width: 220px; margin-top: 10px; border-radius: 12px;">` : ""}
       </div>
     `).join("");
   } catch (erro) {
@@ -150,18 +145,19 @@ async function carregarProjetos() {
   }
 }
 
-// Carregar leads
 async function carregarLeads() {
   try {
     const resposta = await fetch("/api/admin/leads");
     const dados = await resposta.json();
+
+    console.log("Leads recebidos:", dados);
 
     if (!dados.success) {
       listaLeads.innerHTML = `<div class="erro">Erro ao carregar leads.</div>`;
       return;
     }
 
-    if (dados.leads.length === 0) {
+    if (!dados.leads || dados.leads.length === 0) {
       listaLeads.innerHTML = `<p>Nenhum orçamento recebido ainda.</p>`;
       return;
     }
@@ -177,6 +173,12 @@ async function carregarLeads() {
       </div>
     `).join("");
   } catch (erro) {
+    console.error("Erro ao buscar leads:", erro);
     listaLeads.innerHTML = `<div class="erro">Erro ao carregar leads.</div>`;
   }
 }
+setInterval(() => {
+  if (!adminArea.classList.contains("hidden")) {
+    carregarLeads();
+  }
+}, 5000);
