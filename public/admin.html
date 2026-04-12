@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin | Rbytes Systems</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <section class="secao">
+    <div class="container">
+      <h1>Painel Administrativo - Rbytes Systems</h1>
+      <p class="subtitulo">Cadastre projetos, acompanhe leads e gerencie a timeline.</p>
+
+      <!-- LOGIN -->
+      <div class="card" style="margin-bottom: 30px;">
+        <h2>Login do administrador</h2>
+
+        <form id="loginAdminForm" class="form-projeto" style="grid-template-columns: 1fr 1fr auto;">
+          <input type="text" id="adminUsuario" placeholder="Usuário" required>
+          <input type="password" id="adminSenha" placeholder="Senha" required>
+          <button type="submit" class="btn principal">Entrar</button>
+        </form>
+
+        <div id="loginAdminResultado" style="margin-top: 15px;"></div>
+      </div>
+
+      <!-- ÁREA ADMIN -->
+      <div id="adminArea" class="hidden">
+
+        <!-- CADASTRO DE PROJETO -->
+        <div class="card" style="margin-bottom: 30px;">
+          <h2>Cadastrar Projeto</h2>
+
+          <form id="formProjeto" enctype="multipart/form-data" class="painel-acompanhamento">
+            <input type="text" name="cliente" placeholder="Nome do cliente" required>
+            <input type="text" name="nomeProjeto" placeholder="Nome do projeto" required>
+            <input type="text" name="status" placeholder="Status atual" required>
+            <input type="number" name="progresso" placeholder="Progresso em %" required>
+            <input type="text" name="etapaAtual" placeholder="Etapa atual" required>
+            <input type="text" name="previsaoEntrega" placeholder="Previsão de entrega">
+            <textarea name="observacoes" placeholder="Observações do projeto" rows="4"></textarea>
+            <input type="file" name="imagem">
+            <button type="submit" class="btn principal">Cadastrar Projeto</button>
+          </form>
+
+          <div id="resultadoProjetoAdmin" style="margin-top: 15px;"></div>
+        </div>
+
+        <!-- TIMELINE -->
+        <div class="card" style="margin-bottom: 30px;">
+          <h2>Adicionar Etapa na Timeline</h2>
+
+          <form id="formTimeline" class="painel-acompanhamento">
+            <input type="number" name="projeto_id" placeholder="ID do projeto" required>
+            <input type="text" name="etapa" placeholder="Nome da etapa" required>
+            <input type="text" name="descricao" placeholder="Descrição da etapa" required>
+            <input type="text" name="data" placeholder="Ex: 12/04/2026" required>
+            <button type="submit" class="btn principal">Adicionar Etapa</button>
+          </form>
+
+          <div id="resultadoTimeline" style="margin-top: 15px;"></div>
+        </div>
+
+        <!-- LISTA DE PROJETOS -->
+        <div class="card" style="margin-bottom: 30px;">
+          <h2>Projetos Cadastrados</h2>
+          <div id="listaProjetos"></div>
+        </div>
+
+        <!-- LEADS -->
+        <div class="card">
+          <h2>Orçamentos Recebidos</h2>
+          <div id="listaLeads"></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <script src="admin.js"></script>
+</body>
+</html>
