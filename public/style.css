@@ -861,3 +861,99 @@ body {
     padding: 14px;
   }
 }
+/* =========================
+   MENU HAMBURGER AJUSTADO
+========================= */
+
+.menu-toggle {
+  display: none;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 1.3rem;
+  cursor: pointer;
+  line-height: 1;
+}
+
+/* desktop */
+@media (min-width: 769px) {
+  #menu {
+    display: flex !important;
+    position: static;
+    flex-direction: row;
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
+    width: auto;
+  }
+}
+
+/* mobile */
+@media (max-width: 768px) {
+  .topo {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+
+  .nav {
+    position: relative;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 70px;
+    padding: 10px 0;
+  }
+
+  .logo {
+    font-size: 1.3rem;
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+
+  #menu {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    width: 220px;
+    max-width: 85vw;
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+    padding: 10px;
+    flex-direction: column;
+    gap: 4px;
+    z-index: 1100;
+  }
+
+  #menu.ativo {
+    display: flex;
+  }
+
+  #menu a {
+    display: block;
+    text-decoration: none;
+    color: var(--text);
+    font-weight: 600;
+    padding: 12px 14px;
+    border-radius: 10px;
+    text-align: left;
+  }
+
+  #menu a:hover {
+    background: #eef3ff;
+    color: var(--primary);
+  }
+
+  /* espaço para o conteúdo não ficar colado no topo */
+  .hero,
+  .secao {
+    scroll-margin-top: 95px;
+  }
+}
