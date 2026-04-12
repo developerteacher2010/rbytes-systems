@@ -12,16 +12,18 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Arquivos estáticos
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// Criar pasta uploads se não existir
+// Garantir pasta uploads
 const uploadDir = path.join(__dirname, "uploads");
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir);
 }
 
-// Configuração upload
+// Configuração do upload
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, uploadDir);
@@ -39,7 +41,6 @@ const db = new sqlite3.Database(path.join(__dirname, "database.db"));
 
 // Criar tabelas
 db.serialize(() => {
-
   db.run(`
     CREATE TABLE IF NOT EXISTS admins (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -86,25 +87,24 @@ db.serialize(() => {
     )
   `);
 
-  // 🔐 ADMIN DEFINITIVO
-  db.run(`
+  db.run(
+    `
     INSERT OR REPLACE INTO admins (id, usuario, senha)
     VALUES (
       COALESCE((SELECT id FROM admins WHERE usuario = 'rbytes.systems'), NULL),
       'rbytes.systems',
       'Gvs0047*83@83'
     )
-  `, (err) => {
-    if (err) {
-      console.log("Erro admin:", err.message);
-    } else {
-      console.log("Admin pronto: rbytes.systems");
+    `,
+    (err) => {
+      if (err) {
+        console.log("Erro admin:", err.message);
+      } else {
+        console.log("Admin pronto: rbytes.systems");
+      }
     }
-  });
-
+  );
 });
-
-// ROTAS
 
 // Página principal
 app.get("/", (req, res) => {
@@ -116,51 +116,96 @@ app.get("/admin", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "admin.html"));
 });
 
-// LOGIN ADMIN
+// Login admin
 app.post("/api/admin/login", (req, res) => {
   const { usuario, senha } = req.body;
 
+  if (!usuario || !senha) {
+    return res.status(400).json({
+      success: false,
+      message: "Informe usuário e senha."
+    });
+  }
+
   db.get(
-    `SELECT * FROM admins WHERE usuario=? AND senha=?`,
+    `SELECT * FROM admins WHERE usuario = ? AND senha = ?`,
     [usuario, senha],
     (err, row) => {
-      if (!row) {
-        return res.json({ success: false, message: "Login inválido" });
+      if (err) {
+        return res.status(500).json({
+          success: false,
+          message: "Erro interno no login."
+        });
       }
 
-      res.json({ success: true });
+      if (!row) {
+        return res.status(401).json({
+          success: false,
+          message: "Usuário ou senha inválidos."
+        });
+      }
+
+      return res.json({
+        success: true,
+        message: "Login realizado com sucesso."
+      });
     }
   );
 });
 
-// CADASTRAR PROJETO
+// Cadastrar projeto
 app.post("/api/admin/projetos", upload.single("imagem"), (req, res) => {
+  const {
+    cliente,
+    nomeProjeto,
+    status,
+    progresso,
+    etapaAtual,
+    previsaoEntrega,
+    observacoes
+  } = req.body;
 
-  const codigo = "RB-" + Math.floor(Math.random() * 999999);
-  const senha = Math.random().toString(36).slice(-6).toUpperCase();
+  if (!cliente || !nomeProjeto || !status || !progresso || !etapaAtual) {
+    return res.status(400).json({
+      success: false,
+      message: "Preencha os campos obrigatórios do projeto."
+    });
+  }
 
-  const imagem = req.file ? "/uploads/" + req.file.filename : null;
+  const codigo = "RB-" + Math.floor(100000 + Math.random() * 900000);
+  const senha = Math.random().toString(36).slice(-8).toUpperCase();
+  const imagem = req.file ? `/uploads/${req.file.filename}` : null;
 
-  db.run(`
-    INSERT INTO projetos 
+  db.run(
+    `
+    INSERT INTO projetos
     (codigo, senha, cliente, nomeProjeto, status, progresso, etapaAtual, previsaoEntrega, observacoes, imagem)
-    VALUES (?,?,?,?,?,?,?,?,?,?)
-  `,
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `,
     [
       codigo,
       senha,
-      req.body.cliente,
-      req.body.nomeProjeto,
-      req.body.status,
-      req.body.progresso,
-      req.body.etapaAtual,
-      req.body.previsaoEntrega,
-      req.body.observacoes,
+      cliente,
+      nomeProjeto,
+      status,
+      Number(progresso),
+      etapaAtual,
+      previsaoEntrega || "",
+      observacoes || "",
       imagem
     ],
-    function () {
-      res.json({
+    function (err) {
+      if (err) {
+        return res.status(500).json({
+          success: false,
+          message: "Erro ao cadastrar projeto."
+        });
+      }
+
+      return res.status(201).json({
         success: true,
+        message: "Projeto cadastrado com sucesso.",
+        projetoId: this.lastID,
         codigo,
         senha
       });
@@ -168,68 +213,155 @@ app.post("/api/admin/projetos", upload.single("imagem"), (req, res) => {
   );
 });
 
-// LISTAR PROJETOS
+// Listar projetos
 app.get("/api/admin/projetos", (req, res) => {
-  db.all(`SELECT * FROM projetos`, (err, rows) => {
-    res.json({ projetos: rows });
+  db.all(`SELECT * FROM projetos ORDER BY id DESC`, [], (err, rows) => {
+    if (err) {
+      return res.status(500).json({
+        success: false,
+        message: "Erro ao listar projetos."
+      });
+    }
+
+    return res.json({
+      success: true,
+      projetos: rows
+    });
   });
 });
 
-// ADICIONAR TIMELINE
+// Adicionar etapa na timeline
 app.post("/api/admin/timeline", (req, res) => {
-  db.run(`
-    INSERT INTO timeline (projeto_id, etapa, descricao, data)
-    VALUES (?,?,?,?)
-  `,
-    [req.body.projeto_id, req.body.etapa, req.body.descricao, req.body.data],
-    () => res.json({ success: true })
-  );
-});
+  const { projeto_id, etapa, descricao, data } = req.body;
 
-// CONSULTAR PROJETO (CLIENTE)
-app.post("/api/acompanhar", (req, res) => {
-
-  db.get(`
-    SELECT * FROM projetos WHERE codigo=? AND senha=?
-  `,
-    [req.body.codigo, req.body.senha],
-    (err, projeto) => {
-
-      if (!projeto) return res.json({ success: false });
-
-      db.all(`
-        SELECT * FROM timeline WHERE projeto_id=?
-      `,
-        [projeto.id],
-        (err, timeline) => {
-          res.json({ success: true, projeto, timeline });
-        });
+  if (!projeto_id || !etapa || !descricao || !data) {
+    return res.status(400).json({
+      success: false,
+      message: "Preencha todos os campos da timeline."
     });
-});
+  }
 
-// SALVAR ORÇAMENTO
-app.post("/api/orcamento", (req, res) => {
+  db.run(
+    `
+    INSERT INTO timeline (projeto_id, etapa, descricao, data)
+    VALUES (?, ?, ?, ?)
+    `,
+    [projeto_id, etapa, descricao, data],
+    function (err) {
+      if (err) {
+        return res.status(500).json({
+          success: false,
+          message: "Erro ao adicionar etapa."
+        });
+      }
 
-  db.run(`
-    INSERT INTO leads (nome, whatsapp, empresa, servico, mensagem, data)
-    VALUES (?,?,?,?,?,?)
-  `,
-    [
-      req.body.nome,
-      req.body.whatsapp,
-      req.body.empresa,
-      req.body.servico,
-      req.body.mensagem,
-      new Date().toLocaleString()
-    ],
-    () => res.json({ success: true })
+      return res.json({
+        success: true,
+        message: "Etapa adicionada com sucesso."
+      });
+    }
   );
 });
 
-// LISTAR LEADS
+// Acompanhar projeto
+app.post("/api/acompanhar", (req, res) => {
+  const { codigo, senha } = req.body;
+
+  if (!codigo || !senha) {
+    return res.status(400).json({
+      success: false,
+      message: "Informe código e senha."
+    });
+  }
+
+  db.get(
+    `SELECT * FROM projetos WHERE codigo = ? AND senha = ?`,
+    [codigo, senha],
+    (err, projeto) => {
+      if (err) {
+        return res.status(500).json({
+          success: false,
+          message: "Erro ao consultar projeto."
+        });
+      }
+
+      if (!projeto) {
+        return res.status(404).json({
+          success: false,
+          message: "Projeto não encontrado."
+        });
+      }
+
+      db.all(
+        `SELECT * FROM timeline WHERE projeto_id = ? ORDER BY id DESC`,
+        [projeto.id],
+        (err2, etapas) => {
+          if (err2) {
+            return res.status(500).json({
+              success: false,
+              message: "Erro ao buscar timeline."
+            });
+          }
+
+          return res.json({
+            success: true,
+            projeto,
+            timeline: etapas
+          });
+        }
+      );
+    }
+  );
+});
+
+// Salvar orçamento
+app.post("/api/orcamento", (req, res) => {
+  const { nome, whatsapp, empresa, servico, mensagem } = req.body;
+  const data = new Date().toLocaleString("pt-BR");
+
+  if (!nome || !whatsapp) {
+    return res.status(400).json({
+      success: false,
+      message: "Nome e WhatsApp são obrigatórios."
+    });
+  }
+
+  db.run(
+    `
+    INSERT INTO leads (nome, whatsapp, empresa, servico, mensagem, data)
+    VALUES (?, ?, ?, ?, ?, ?)
+    `,
+    [nome, whatsapp, empresa || "", servico || "", mensagem || "", data],
+    function (err) {
+      if (err) {
+        return res.status(500).json({
+          success: false,
+          message: "Erro ao salvar orçamento."
+        });
+      }
+
+      return res.json({
+        success: true,
+        message: "Orçamento enviado com sucesso."
+      });
+    }
+  );
+});
+
+// Listar leads
 app.get("/api/admin/leads", (req, res) => {
-  db.all(`SELECT * FROM leads`, (err, rows) => {
-    res.json({ leads: rows });
+  db.all(`SELECT * FROM leads ORDER BY id DESC`, [], (err, rows) => {
+    if (err) {
+      return res.status(500).json({
+        success: false,
+        message: "Erro ao listar leads."
+      });
+    }
+
+    return res.json({
+      success: true,
+      leads: rows
+    });
   });
 });
 
@@ -238,7 +370,7 @@ app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-// Start
+// Iniciar servidor
 app.listen(PORT, () => {
-  console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);
+  console.log(`Servidor rodando em http://localhost:${PORT}`);
 });
