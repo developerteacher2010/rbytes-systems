@@ -1,3 +1,4 @@
 node_modules
-database.databaseuploads
+database.db
+uploads
 .env
