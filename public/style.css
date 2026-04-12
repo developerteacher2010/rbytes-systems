@@ -89,17 +89,17 @@
     align-items: center;
   }
   
-  .tag {
-    display: inline-block;
-    background: #e7efff;
-    color: var(--primary-dark);
-    padding: 8px 14px;
-    border-radius: 999px;
-    font-size: 0.9rem;
-    margin-bottom: 18px;
-    font-weight: bold;
-  }
-  
+.tag {
+  display: table;
+  background: #e7efff;
+  color: var(--primary-dark);
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  margin: 0 auto 18px;
+  font-weight: bold;
+  text-align: center;
+}
   .hero h1 {
     font-size: 2.8rem;
     line-height: 1.15;
