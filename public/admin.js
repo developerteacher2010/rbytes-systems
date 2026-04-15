@@ -42,7 +42,6 @@ loginAdminForm?.addEventListener("submit", async (e) => {
     loginAdminResultado.innerHTML = `<div class="erro">Erro ao realizar login.</div>`;
   }
 });
-
 formProjeto?.addEventListener("submit", async (e) => {
   e.preventDefault();
 

@@ -334,11 +334,16 @@ app.post("/api/orcamento", async (req, res) => {
   try {
     const { nome, whatsapp, empresa, servico, mensagem } = req.body;
 
+    if (!nome || !whatsapp) {
+      return res.status(400).json({
+        success: false,
+        message: "Nome e WhatsApp são obrigatórios."
+      });
+    }
+
     await pool.query(
-      `
-      INSERT INTO leads (nome, whatsapp, empresa, servico, mensagem, data)
-      VALUES ($1,$2,$3,$4,$5,$6)
-      `,
+      `INSERT INTO leads (nome, whatsapp, empresa, servico, mensagem, data)
+       VALUES ($1, $2, $3, $4, $5, $6)`,
       [
         nome,
         whatsapp,
@@ -357,17 +362,16 @@ app.post("/api/orcamento", async (req, res) => {
     console.error("Erro ao salvar orçamento:", error);
     return res.status(500).json({
       success: false,
-      message: "Erro ao salvar orçamento"
+      message: "Erro ao salvar orçamento."
     });
   }
 });
 
-// ============================
-// LISTAR LEADS
-// ============================
 app.get("/api/admin/leads", async (req, res) => {
   try {
-    const result = await pool.query("SELECT * FROM leads ORDER BY id DESC");
+    const result = await pool.query(
+      "SELECT * FROM leads ORDER BY id DESC"
+    );
 
     return res.json({
       success: true,
@@ -377,7 +381,7 @@ app.get("/api/admin/leads", async (req, res) => {
     console.error("Erro ao listar leads:", error);
     return res.status(500).json({
       success: false,
-      message: "Erro ao listar leads"
+      message: "Erro ao listar leads."
     });
   }
 });

@@ -385,6 +385,37 @@
       <p id="modalTexto"></p>
     </div>
   </div>
+  <div class="chatbot">
+  <button id="chatbotToggle" class="chatbot-toggle">Chat</button>
+
+  <div id="chatbotBox" class="chatbot-box hidden">
+    <div class="chatbot-header">
+      <strong>Assistente Rbytes</strong>
+    </div>
+
+    <div id="chatbotMessages" class="chatbot-messages">
+      <div class="bot-msg">Olá! Posso ajudar com site, sistema, app ou orçamento.</div>
+    </div>
+
+    <div class="chatbot-actions">
+      <button type="button" onclick="respostaChat('site')">Quero um site</button>
+      <button type="button" onclick="respostaChat('sistema')">Quero um sistema</button>
+      <button type="button" onclick="respostaChat('orcamento')">Pedir orçamento</button>
+      <button type="button" onclick="respostaChat('whatsapp')">Falar no WhatsApp</button>
+    </div>
+  </div>
+</div>
+  <a
+  href="https://wa.me/5531989356164?text=Olá! Quero falar com a Rbytes Systems."
+  class="whatsapp-float"
+  target="_blank"
+  aria-label="Falar no WhatsApp"
+>
+  <svg viewBox="0 0 32 32" aria-hidden="true">
+    <path fill="currentColor" d="M19.11 17.35c-.26-.13-1.53-.75-1.77-.84-.24-.09-.41-.13-.59.13-.17.26-.67.84-.82 1.01-.15.17-.3.2-.56.07-.26-.13-1.09-.4-2.08-1.28-.77-.69-1.29-1.54-1.44-1.8-.15-.26-.02-.4.11-.53.12-.12.26-.3.39-.45.13-.15.17-.26.26-.43.09-.17.04-.32-.02-.45-.07-.13-.59-1.42-.8-1.95-.21-.5-.43-.43-.59-.44h-.5c-.17 0-.45.07-.69.32-.24.26-.91.89-.91 2.17s.93 2.52 1.06 2.69c.13.17 1.83 2.79 4.43 3.91.62.27 1.1.43 1.48.55.62.2 1.18.17 1.62.1.49-.07 1.53-.63 1.74-1.24.22-.61.22-1.13.15-1.24-.06-.11-.24-.17-.5-.3z"/>
+    <path fill="currentColor" d="M16.03 3C8.84 3 3 8.72 3 15.77c0 2.25.61 4.45 1.77 6.38L3 29l7.12-1.86a13.13 13.13 0 0 0 5.91 1.4h.01c7.18 0 13.02-5.72 13.02-12.77C29.06 8.72 23.21 3 16.03 3zm0 23.42h-.01a11 11 0 0 1-5.57-1.51l-.4-.24-4.23 1.11 1.13-4.1-.26-.42a10.64 10.64 0 0 1-1.64-5.49c0-5.88 4.9-10.66 10.97-10.66 6.06 0 10.98 4.78 10.98 10.66 0 5.88-4.93 10.65-10.97 10.65z"/>
+  </svg>
+</a>
   <script src="script.js"></script>
   <script src="manu.js"></script>
 </body>

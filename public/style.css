@@ -27,6 +27,32 @@
     color: var(--text);
     line-height: 1.6;
   }
+  .whatsapp-float {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: #25d366;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+  z-index: 1200;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.whatsapp-float svg {
+  width: 30px;
+  height: 30px;
+}
+
+.whatsapp-float:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 14px 30px rgba(0,0,0,0.32);
+}
   
   .container {
     width: 90%;
@@ -73,7 +99,93 @@
     font-weight: 600;
     transition: 0.3s;
   }
-  
+  .chatbot {
+  position: fixed;
+  right: 18px;
+  bottom: 88px;
+  z-index: 1190;
+}
+
+.chatbot-toggle {
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 999px;
+  padding: 12px 18px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+}
+
+.chatbot-box {
+  width: 320px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 12px 35px rgba(0,0,0,0.18);
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+.chatbot-header {
+  background: var(--primary);
+  color: white;
+  padding: 14px 16px;
+}
+
+.chatbot-messages {
+  padding: 14px;
+  max-height: 260px;
+  overflow-y: auto;
+  background: #f8fbff;
+}
+
+.bot-msg,
+.user-msg {
+  padding: 10px 12px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+}
+
+.bot-msg {
+  background: #eaf1ff;
+  color: var(--text);
+}
+
+.user-msg {
+  background: #dff7e8;
+  color: #144d2a;
+  text-align: right;
+}
+
+.chatbot-actions {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  background: #fff;
+}
+
+.chatbot-actions button {
+  border: 1px solid var(--border);
+  background: white;
+  color: var(--text);
+  border-radius: 10px;
+  padding: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.chatbot-actions button:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+@media (max-width: 600px) {
+  .chatbot-box {
+    width: 290px;
+  }
+}
   nav a:hover {
     color: var(--primary);
   }
