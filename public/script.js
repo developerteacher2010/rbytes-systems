@@ -179,6 +179,6 @@ function respostaChat(tipo) {
   if (tipo === "whatsapp") {
     adicionarMensagem("Falar no WhatsApp", "user");
     adicionarMensagem("Estou te redirecionando para o WhatsApp.");
-    window.open("https://wa.me/5531975643852?text=Olá! Quero falar com a Rbytes Systems.", "_blank");
+    window.open("https://wa.me/5531999038472?text=Olá! Quero falar com a Rbytes Systems.", "_blank");
   }
 }
